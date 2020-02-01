@@ -69,5 +69,53 @@ module.exports = {
       }
     }
   }
-}
+},
+  downloadFile(req, res, next) {
+    File.findOne({ name: req.params.name }, (err, file) => {
+      if (err) {
+        res.status(400).end();
+      }
+
+      if (!file) {
+        File.findOne({ encodedName: req.params.name }, (err, file) => {
+          if (err) {
+            res.status(400).end();
+          }
+          if (!file) {
+            res.status(404).end();
+          }
+
+          let fileLocation = path.join(__dirname, '..', 'uploads', file.name)
+
+          res.download(fileLocation, (err) => {
+            if (err) {
+              res.status(400).end();
+            }
+          })
+        })
+      }
+    })
+  },
+  deleteFile(req, res, next) {
+    File.findOne({ id: req.params._id }, (err, file) => {
+      if (err) {
+        res.status(400).end();
+      }
+
+      if (!file) {
+        res.status(404).end();
+      }
+
+      let fileLocation = path.join(__dirname, '..', 'uploads', file.name)
+
+      fs.unlink(fileLocation, () => {
+        File.deleteOne(file, (err) => {
+          if (err) {
+            return next(err)
+          }
+          return res.send([])
+        })
+      })
+    })
+  },
 }

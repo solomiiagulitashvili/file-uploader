@@ -3,7 +3,7 @@
     <h1>Files List</h1>
 
     <ul>
-      <uploaded-file v-for="file in files" v-bind:file.sync="file"></uploaded-file>
+      <uploaded-file v-for="file in files" v-bind:file.sync="file" v-on:delete-file="deleteFile"></uploaded-file>
     </ul>
   </div>
 </template>
@@ -33,14 +33,23 @@ export default {
       files.forEach(file => {
         this.files.push(file);
       });
+    },
+    deleteFile(file) {
+      if (confirm("Are you sure you want to delete the file?")) {
+        axios
+          .delete(`/api/files/${file._id}`)
+          .then(() => {
+            const fileIndex = this.files.indexOf(file);
+            this.files.splice(fileIndex, 1);
+          })
+          .catch(() => {
+            console.log("Error deleting file");
+          });
+      }
+    },
+    mounted() {
+      this.fetchFiles();
     }
-  },
-  mounted() {
-    this.fetchFiles();
   }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

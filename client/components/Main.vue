@@ -11,26 +11,26 @@
 </template >
 
 <script>
-import axios from "axios";
-import UploadedFiles from "./UploadedFilesList.vue";
-import UploadsContainer from "./UploadsContainer.vue";
+import axios from 'axios';
+import UploadedFiles from './UploadedFilesList.vue';
+import UploadsContainer from './UploadsContainer.vue';
 
 export default {
-  name: "Main",
+  name: 'Main',
   data() {
     return {
-      files: []
+      files: [],
     };
   },
   components: {
     UploadedFiles,
-    UploadsContainer
+    UploadsContainer,
   },
   methods: {
     filesUploaded(files) {
       this.$refs.filesList.filesUploaded(files);
-    }
-  }
+    },
+  },
 };
 </script>
 
